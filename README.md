@@ -1,4 +1,4 @@
-# OpenInvestorSkills
+# Open Investor Skills
 
 > A collection of Claude Skills for US stock market analysis —
 > from fundamental research to earnings decoding to real-time news sentiment.
@@ -151,32 +151,12 @@ npm install -g @anthropic-ai/claude-code
 git clone https://github.com/YOUR_USERNAME/open-investor-skills.git
 ```
 
-### 3. 安装 Skills
-
-```bash
-# 全局安装（所有项目可用）
-cp -r open-investor-skills/stock-fundamental-research  ~/.claude/skills/
-cp -r open-investor-skills/earnings-report-decoder     ~/.claude/skills/
-cp -r open-investor-skills/news-sentiment-analyzer     ~/.claude/skills/
-
-# 或者：项目级安装（仅当前目录可用）
-mkdir -p .claude/skills
-cp -r open-investor-skills/stock-fundamental-research  .claude/skills/
-cp -r open-investor-skills/earnings-report-decoder     .claude/skills/
-cp -r open-investor-skills/news-sentiment-analyzer     .claude/skills/
-```
-
-### 4. 验证安装
+### 3. 验证安装
 
 ```bash
 claude
-> /help    # 查看已加载的 Skills 列表
+> /context    # 查看已加载的 Skills 列表
 ```
-
-### 5. 可选：连接 Gmail（用于自动发送报告）
-
-在 Claude Code 中连接 Gmail MCP，即可在每次分析后自动将报告发送到你的邮箱。
-详见 [MCP 配置文档](https://docs.anthropic.com/en/docs/claude-code/mcp)。
 
 ---
 
@@ -197,30 +177,6 @@ claude
 > 今天 Adobe CEO 宣布离职，这对 ADBE 股价影响大吗？
 ```
 
-### 进阶用法：上传文件
-
-```bash
-# 上传财报 PDF 直接解读
-> [上传 MSFT_10K_2025.pdf] 帮我读这份年报，重点看 MD&A 和现金流
-
-# 粘贴新闻文本分析
-> [粘贴一段新闻] 这条消息对持仓有影响吗？
-```
-
-### 组合工作流
-
-```bash
-# 财报季标准流程
-> GOOGL 财报刚出，先帮我快速判断一下新闻情绪
-# → news-sentiment-analyzer 触发，输出评分
-
-> 评分 -2，帮我深入读一下这份 10-Q
-# → earnings-report-decoder 触发，输出解读笔记
-
-> 基于这份财报，重新评估一下 GOOGL 的整体基本面
-# → stock-fundamental-research 触发，输出完整研究报告
-```
-
 ---
 
 ## Output Structure
@@ -237,64 +193,6 @@ output/
 └── ADBE_news_20260314_1430.pdf        # 新闻情绪报告（PDF，配色随评分变化）
 ```
 
----
-
-## Repository Structure
-
-```
-open-investor-skills/
-│
-├── README.md
-│
-├── stock-fundamental-research/
-│   ├── SKILL.md                        # 四步研究框架
-│   └── references/
-│       ├── financial-metrics.md        # 财务指标评分标准
-│       ├── valuation-methods.md        # DCF + 相对估值详解
-│       └── sector-benchmarks.md        # 10+ 行业估值基准
-│
-├── earnings-report-decoder/
-│   ├── SKILL.md                        # 10-K/10-Q/8-K/电话会议解读
-│   └── references/
-│       ├── three-statements.md         # 三张报表逐行拆解
-│       ├── non-gaap-guide.md           # Non-GAAP 陷阱识别
-│       └── sec-edgar-howto.md          # SEC EDGAR 导航手册
-│
-└── news-sentiment-analyzer/
-    ├── SKILL.md                        # 7 大新闻框架 + 情绪评分系统
-    └── references/
-        ├── sector-sensitivity.md       # 行业新闻敏感度矩阵
-        ├── historical-patterns.md      # 历史同类事件规律
-        └── source-credibility.md       # 新闻来源可信度分级
-```
-
----
-
-## Roadmap
-
-Skills planned for future releases:
-
-- [ ] `position-manager` — 仓位管理与风险控制（止损 / Kelly / 分散原则）
-- [ ] `weekly-portfolio-review` — 持仓周复盘（逻辑验证 / 纪律执行）
-- [ ] `macro-decoder` — 宏观经济解读（利率 / CPI / Fed 政策）
-- [ ] `sector-deep-dive` — 行业赛道分析（AI / 半导体 / 新能源）
-- [ ] `earnings-calendar` — 财报季备战（预期整理 / 风险评估）
-- [ ] `options-primer` — 期权策略入门（Call/Put / 希腊字母）
-
-PRs and issues welcome.
-
----
-
-## Contributing
-
-1. Fork 本仓库
-2. 创建新分支：`git checkout -b feat/your-skill-name`
-3. 按照现有 Skill 结构编写 `SKILL.md` 和 `references/`
-4. 提交 PR，说明 Skill 的触发场景和输出格式
-
-**Skill 编写规范**：参考 [Claude Skills 官方文档](https://docs.anthropic.com/en/docs/claude-code/skills)。
-
----
 
 ## License
 
