@@ -23,13 +23,13 @@ Each Skill teaches Claude a professional analysis framework — so instead of as
 
 ## Skills Overview
 
-![](skills.png)
-
 | Skill | Trigger | Output |
 |-------|---------|--------|
 | [`stock-fundamental-research`](#-stock-fundamental-research) | "分析一下 NVDA" / "XX 值得买吗" | 四步个股研究报告（业务 + 财务 + 估值 + 护城河）|
 | [`earnings-report-decoder`](#-earnings-report-decoder) | "帮我读这份财报" / "Q3 业绩怎么样" | 结构化财报解读笔记（10-K / 10-Q / 8-K）|
 | [`news-sentiment-analyzer`](#-news-sentiment-analyzer) | "这条新闻是利好还是利空" | 情绪评分卡（-3 到 +3）+ 建议行动 |
+| [`technical-analysis-primer`](#-technical-analysis-primer) | "RSI 超买了要卖吗" / "支撑位在哪" | 技术面分析报告（趋势 + 价位 + 均线 + 指标）|
+| [`weekly-portfolio-review`](#-weekly-portfolio-review) | "帮我复盘持仓" / "这只还要继续持有吗" | 结构化持仓复盘报告（继续持有 / 减仓观察 / 清仓）|
 
 ### How they work together
 
@@ -44,6 +44,12 @@ earnings-report-decoder        ← 读原始财报，验证数字
       │
       ▼  （重新评估基本面）
 stock-fundamental-research     ← 完整估值 + 护城河分析，决定是否调仓
+      │
+      ▼  （确定买入意向后）
+technical-analysis-primer      ← 判断当前价格位置，辅助决定买入时机
+      │
+      ▼  （定期复盘）
+weekly-portfolio-review        ← 验证持仓逻辑是否仍然成立，管理仓位
 ```
 
 ---
@@ -139,6 +145,67 @@ Fed 加息预期上升对我持有的科技股影响大吗？
 
 ---
 
+### 📈 technical-analysis-primer
+
+解读美股技术指标，辅助判断当前价格位置和买卖时机。
+
+**五层分析框架**：
+
+| 层级 | 内容 | 核心产出 |
+|------|------|---------|
+| 第一层 | 趋势判断 | 主趋势 / 中趋势方向，趋势强度 |
+| 第二层 | 关键价位 | 重要支撑位与压力位（历史高低点/均线/整数关口）|
+| 第三层 | 均线系统 | 多头/空头排列，金叉/死叉状态 |
+| 第四层 | 动量指标 | RSI 超买超卖 + MACD 背离信号 |
+| 第五层 | 成交量确认 | 量价关系，有效突破 vs 假突破 |
+
+**自动输出**：技术面分析报告 `.md`，保存至 `output/[TICKER]/`。
+
+**参考文件**：
+- `references/candlestick-patterns.md` — 40+ K线形态图示与解读
+- `references/indicator-settings.md` — 各指标参数配置与适用场景
+- `references/ta-checklist.md` — 买入/卖出前的技术面检查清单
+
+**触发示例**：
+```
+NVDA 现在是买入时机吗？
+均线死叉了怎么办？
+RSI 超买了要卖吗？
+帮我看看 AAPL 的支撑位在哪
+```
+
+---
+
+### 📋 weekly-portfolio-review
+
+对持仓进行周期性复盘，逐一验证每只股票的买入逻辑是否仍然成立。
+
+**四问复盘框架**：
+
+| 问题 | 核心验证 | 判断结论 |
+|------|---------|---------|
+| 买入逻辑还成立吗？ | 成长/估值/催化剂/护城河逻辑验证 | ✅ 继续持有 / ⚠️ 减仓观察 / 🚨 考虑清仓 |
+| 有没有出现新的风险？ | 公司/估值/宏观三类风险扫描 | 低 / 中 / 高 |
+| 仓位比例是否合理？ | 单仓占比上限检查 + 再平衡触发 | 维持 / 修剪 / 加仓 |
+| 与买入时相比性价比如何？ | 股价变化 × 逻辑变化四象限 | 改善 / 持平 / 恶化 |
+
+**自动输出**：持仓复盘报告 `.md`，保存至 `output/`。
+
+**参考文件**：
+- `references/risk-checklist.md` — 持仓风险全面检查清单
+- `references/portfolio-health.md` — 组合健康度评估框架
+- `references/review-log.md` — 历史复盘记录格式
+
+**触发示例**：
+```
+帮我复盘一下持仓
+NVDA 还要继续持有吗？
+检查一下我的仓位，哪些该卖了
+（附上持仓清单）
+```
+
+---
+
 ## Installation
 
 ### 1. 安装 Claude Code CLI
@@ -177,6 +244,12 @@ claude
 
 # 新闻分析
 > 今天 Adobe CEO 宣布离职，这对 ADBE 股价影响大吗？
+
+# 技术分析
+> NVDA 现在技术面怎么样，支撑位在哪？
+
+# 持仓复盘
+> 帮我复盘一下持仓，NVDA/AAPL/MSFT 各占 30%/40%/30%
 ```
 
 ---
@@ -192,7 +265,10 @@ output/
 ├── AAPL_10Q_2026Q1_20260314.md        # 财报解读笔记（Markdown）
 ├── AAPL_10Q_2026Q1_20260314.pdf       # 财报解读笔记（PDF）
 ├── ADBE_news_20260314_1430.md         # 新闻情绪报告（Markdown）
-└── ADBE_news_20260314_1430.pdf        # 新闻情绪报告（PDF，配色随评分变化）
+├── ADBE_news_20260314_1430.pdf        # 新闻情绪报告（PDF，配色随评分变化）
+├── NVDA/
+│   └── NVDA_ta_20260314.md            # 技术面分析报告（Markdown）
+└── portfolio_review_20260314.md       # 持仓周复盘报告（Markdown）
 ```
 
 
