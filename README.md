@@ -23,6 +23,8 @@ Each Skill teaches Claude a professional analysis framework — so instead of as
 
 ## Skills Overview
 
+![](skills.png)
+
 | Skill | Trigger | Output |
 |-------|---------|--------|
 | [`stock-fundamental-research`](#-stock-fundamental-research) | "分析一下 NVDA" / "XX 值得买吗" | 四步个股研究报告（业务 + 财务 + 估值 + 护城河）|
