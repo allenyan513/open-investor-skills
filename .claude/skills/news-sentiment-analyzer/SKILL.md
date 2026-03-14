@@ -368,19 +368,19 @@ CFO 变动：
 
 ### 文件命名规则
 ```
-[TICKER]_news_[YYYYMMDD_HHMM].md / .pdf
+[TICKER]_news_[YYYYMMDD_HHMM].md
 示例：NVDA_news_20250314_1430.md
-保存路径：当前目录下的 output/ 子目录
+保存路径：当前目录下的 outputs/[TICKER] 子目录
 ```
 
 **执行顺序**：
 ```
 [分析完成]
      ↓
-1. mkdir -p output
-2. 写入 output/[TICKER]_news_[DATE_TIME].md
+1. mkdir -p outputs/[TICKER]
+2. 写入 outputs/[TICKER]/[TICKER]_news_[DATE_TIME].md
      ↓
-"✅ 分析完成 | 评分：[±X] | 文件：output/... | 邮件：已发送"
+"✅ 分析完成 | 评分：[±X] "
 ```
 
 ---

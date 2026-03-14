@@ -343,24 +343,25 @@ description: >
 
 ---
 
-## 报告输出
+## 报告输出与自动分发
 
-**复盘完成后，将报告保存为 Markdown 文件。**
+**分析完成后执行：生成 MD -> 保存到本地**
 
+### 文件命名
 ```
-命名规则：portfolio_review_[YYYYMMDD].md
-示例：    portfolio_review_20260314.md
-保存路径：当前工作目录下的 output/ 子目录
-```
-
-```bash
-mkdir -p output
-# 将「整体持仓复盘汇总模板」的完整内容写入对应文件
+[TICKER]_portfolio_review_[YYYYMMDD].md
+示例：NVDA_portfolio_review_20260314.md
+保存路径：当前目录下的 outputs/[TICKER] 子目录
 ```
 
-完成后告知用户：
+**执行顺序**：
 ```
-✅ 周复盘报告已保存：output/portfolio_review_20260314.md
+[分析完成]
+     ↓
+1. mkdir -p outputs/[TICKER]
+2. 写入 outputs/[TICKER]/[TICKER]_portfolio_review_[DATE].md
+     ↓
+"✅ 分析完成"
 ```
 
 ---

@@ -356,6 +356,30 @@ EPS(摊薄)      $____       $____       $____        ±____%
 
 ---
 
+## 报告保存
+
+**分析完成后执行：生成 MD → 保存**
+
+### 文件命名规则
+```
+[TICKER]_earnings_report_[YYYYMMDD_HHMM].md
+示例：NVDA_earnings_report_20250314_1430.md
+保存路径：当前目录下的 outputs/[TICKER] 子目录
+```
+
+**执行顺序**：
+```
+[分析完成]
+     ↓
+1. mkdir -p outputs/[TICKER]
+2. 写入 outputs/[TICKER]/[TICKER]_earnings_report_[DATE_TIME].md
+     ↓
+"✅ 分析完成"
+```
+
+
+---
+
 ## 参考文件索引
 
 - `references/three-statements.md` — 三张报表逐行解读指南

@@ -212,21 +212,28 @@ description: >
 
 ---
 
-## 报告保存到本地
+## 报告保存
 
-**完成研究后，将报告保存到output文件夹下**
+**分析完成后执行：生成 MD → 保存**
 
-### 第一步：生成 Markdown 研究报告
-
-文件命名规则：`[TICKER]_research_[今日日期].md`
-示例：`NVDA_research_20250314.md`
-
-保存路径：**当前工作目录下的 `output/` 子目录**（不存在则自动创建）
-
-```bash
-mkdir -p output
-# 将「最终报告输出模板」的完整内容写入 output/[文件名].md
+### 文件命名规则
 ```
+[TICKER]_research_[YYYYMMDD_HHMM].md
+示例：NVDA_research_20250314_1430.md
+保存路径：当前目录下的 outputs/[TICKER] 子目录
+```
+
+**执行顺序**：
+```
+[分析完成]
+     ↓
+1. mkdir -p outputs/[TICKER]
+2. 写入 output/[TICKER]/[TICKER]_research_[DATE_TIME].md
+     ↓
+"✅ 分析完成 "
+```
+
+---
 
 ## 注意事项
 
