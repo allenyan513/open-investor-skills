@@ -25,31 +25,31 @@ Each Skill teaches Claude a professional analysis framework — so instead of as
 
 | Skill | Trigger | Output |
 |-------|---------|--------|
-| [`stock-fundamental-research`](#-stock-fundamental-research) | "分析一下 NVDA" / "XX 值得买吗" | 四步个股研究报告（业务 + 财务 + 估值 + 护城河）|
-| [`earnings-report-decoder`](#-earnings-report-decoder) | "帮我读这份财报" / "Q3 业绩怎么样" | 结构化财报解读笔记（10-K / 10-Q / 8-K）|
-| [`news-sentiment-analyzer`](#-news-sentiment-analyzer) | "这条新闻是利好还是利空" | 情绪评分卡（-3 到 +3）+ 建议行动 |
-| [`technical-analysis-primer`](#-technical-analysis-primer) | "RSI 超买了要卖吗" / "支撑位在哪" | 技术面分析报告（趋势 + 价位 + 均线 + 指标）|
-| [`weekly-portfolio-review`](#-weekly-portfolio-review) | "帮我复盘持仓" / "这只还要继续持有吗" | 结构化持仓复盘报告（继续持有 / 减仓观察 / 清仓）|
+| [`stock-fundamental-research`](#-stock-fundamental-research) | "Analyze NVDA" / "Is AAPL worth buying?" | 4-step research report (Business + Financials + Valuation + Moat) |
+| [`earnings-report-decoder`](#-earnings-report-decoder) | "Read this earnings report" / "How was Q3?" | Structured earnings notes (10-K / 10-Q / 8-K / Transcript) |
+| [`news-sentiment-analyzer`](#-news-sentiment-analyzer) | "Is this news bullish or bearish?" | Sentiment scorecard (-3 to +3) + recommended action |
+| [`technical-analysis-primer`](#-technical-analysis-primer) | "Is now a good entry?" / "Where's the support?" | Technical report (Trend + Levels + MA + Momentum) |
+| [`weekly-portfolio-review`](#-weekly-portfolio-review) | "Review my portfolio" / "Should I still hold this?" | Structured review report (Hold / Trim / Exit) |
 
 ### How they work together
 
 ```
-一条新闻进来
+A news event arrives
       │
       ▼
-news-sentiment-analyzer        ← 快速判断：信号还是噪音？评分 ≥ ±2？
+news-sentiment-analyzer        ← Quick signal vs noise check. Score ≥ ±2?
       │
-      ▼  （评分触发深入研究）
-earnings-report-decoder        ← 读原始财报，验证数字
+      ▼  (score triggers deeper research)
+earnings-report-decoder        ← Read the raw filing, verify the numbers
       │
-      ▼  （重新评估基本面）
-stock-fundamental-research     ← 完整估值 + 护城河分析，决定是否调仓
+      ▼  (re-evaluate fundamentals)
+stock-fundamental-research     ← Full valuation + moat analysis, decide on position
       │
-      ▼  （确定买入意向后）
-technical-analysis-primer      ← 判断当前价格位置，辅助决定买入时机
+      ▼  (entry timing)
+technical-analysis-primer      ← Assess current price position, find entry zone
       │
-      ▼  （定期复盘）
-weekly-portfolio-review        ← 验证持仓逻辑是否仍然成立，管理仓位
+      ▼  (ongoing management)
+weekly-portfolio-review        ← Verify buy thesis still holds, manage position sizing
 ```
 
 ---
@@ -58,219 +58,218 @@ weekly-portfolio-review        ← 验证持仓逻辑是否仍然成立，管理
 
 ### 📊 stock-fundamental-research
 
-对任意美股个股进行系统性基本面研究，覆盖四个维度：
+Systematic fundamental research on any US stock across four dimensions:
 
-| 步骤 | 内容 | 核心产出 |
-|------|------|---------|
-| 第一步 | 业务快照 | 商业模式、收入结构、增长驱动 |
-| 第二步 | 财务质量 | 盈利能力、成长性、健康度、红旗警示 |
-| 第三步 | 估值分析 | 相对估值 + DCF 三情景价值区间 |
-| 第四步 | 护城河评估 | Morningstar 五维框架打分 |
+| Step | Focus | Key Output |
+|------|-------|------------|
+| Step 1 | Business Snapshot | Business model, revenue mix, growth drivers |
+| Step 2 | Financial Quality | Profitability, growth, balance sheet, red flags |
+| Step 3 | Valuation | Relative valuation + DCF three-scenario range |
+| Step 4 | Moat Assessment | Morningstar 5-source framework scoring |
 
-**自动输出**：研究报告 `.md` + `.pdf`，可选 Gmail 发送。
+**Auto output**: Research report `.md` + `.pdf`, with optional Gmail delivery.
 
-**参考文件**：
-- `references/financial-metrics.md` — 各指标优秀/及格/警戒线标准
-- `references/valuation-methods.md` — DCF 详细计算步骤
-- `references/sector-benchmarks.md` — 10+ 行业估值基准
+**Reference files**:
+- `references/financial-metrics.md` — Excellent / acceptable / warning thresholds for key metrics
+- `references/valuation-methods.md` — Step-by-step DCF calculation guide
+- `references/sector-benchmarks.md` — Valuation benchmarks for 10+ sectors
 
-**触发示例**：
+**Trigger examples**:
 ```
-分析一下 NVDA 的基本面
-AAPL 现在估值合理吗？
-帮我研究一下 MSFT，看看值不值得长期持有
+Analyze NVDA's fundamentals
+Is AAPL's valuation reasonable right now?
+Help me research MSFT — is it worth holding long term?
 ```
 
 ---
 
 ### 📋 earnings-report-decoder
 
-解读 SEC 财报文件，覆盖 10-K / 10-Q / 8-K / 电话会议四种格式。
-**核心价值**：告诉你去哪里找、找什么、怎么判断好坏。
+Decode SEC filings across four formats: 10-K, 10-Q, 8-K, and earnings call transcripts.
+**Core value**: tells you where to look, what to look for, and how to judge it.
 
-| 文件类型 | 核心解读框架 |
-|---------|------------|
-| 10-K 年报 | 必读章节地图 → MD&A 四大重点 → 三表快速扫描 |
-| 10-Q 季报 | 5 分钟速读框架：结果 vs 预期 → 变化解释 → 现金流 |
-| 8-K 重大公告 | 17 种 Item 类型速查 + 60 秒判断法 |
-| 电话会议 | 管理层陈述要点 + Q&A 信号识别 |
+| Filing Type | Analysis Framework |
+|-------------|-------------------|
+| 10-K Annual | Must-read section map → MD&A four key areas → 3-statement quick scan |
+| 10-Q Quarterly | 5-minute framework: result vs estimate → variance explanation → cash flow |
+| 8-K Material Event | 17 Item type quick-ref + 60-second triage method |
+| Earnings Call | Management commentary highlights + Q&A signal identification |
 
-**自动输出**：财报解读笔记 `.md` + `.pdf`，可选 Gmail 发送。
+**Auto output**: Earnings notes `.md` + `.pdf`, with optional Gmail delivery.
 
-**参考文件**：
-- `references/three-statements.md` — 三张报表逐行拆解 + 联动关系
-- `references/non-gaap-guide.md` — Non-GAAP 调整项识别与陷阱
-- `references/sec-edgar-howto.md` — SEC EDGAR 导航手册
+**Reference files**:
+- `references/three-statements.md` — Line-by-line breakdown of all three statements + linkages
+- `references/non-gaap-guide.md` — Identifying Non-GAAP adjustments and common traps
+- `references/sec-edgar-howto.md` — SEC EDGAR navigation guide
 
-**触发示例**：
+**Trigger examples**:
 ```
-NVDA 最新季报出来了，帮我解读一下
-这份 10-K 的 MD&A 说了什么重要的？（上传 PDF）
-META 这季度 beat 了吗？下季度指引怎么样？
+NVDA's latest quarterly report is out — decode it for me
+What does the MD&A section say in this 10-K? (upload PDF)
+Did META beat estimates this quarter? What's the guidance?
 ```
 
 ---
 
 ### 📰 news-sentiment-analyzer
 
-快速判断新闻对股价的影响方向和持续时间，输出标准化情绪评分卡。
+Quickly assess a news item's impact direction and duration. Outputs a standardized sentiment scorecard.
 
-**7 种新闻框架**：
+**7 News Frameworks**:
 
-| 框架 | 类型 | 核心判断逻辑 |
-|------|------|------------|
-| A | 财务业绩 | 结果 vs 预期 × 指引 vs 预期 × KPI 趋势 |
-| B | 业务事件 | 并购溢价合理性 / 合同金额占比 / 产品 TAM |
-| C | 监管政策 | 四级严重程度（实质影响 vs 情绪冲击）|
-| D | 宏观经济 | 利率敏感度 × 行业属性映射 |
-| E | 行业动态 | 竞争格局变化 / 供应链传导链 |
-| F | 高管人事 | 突然离职信号解读 / 内部人交易分析 |
-| G | 市场情绪 | 分析师评级 / 做空报告可信度 / meme 风险 |
+| Framework | Type | Core Logic |
+|-----------|------|------------|
+| A | Financial Results | Result vs estimate × guidance vs estimate × KPI trend |
+| B | Business Events | M&A premium rationality / contract size / product TAM |
+| C | Regulatory | 4-level severity scale (substantive impact vs sentiment shock) |
+| D | Macro | Interest rate sensitivity × sector attribute mapping |
+| E | Industry | Competitive landscape shift / supply chain propagation |
+| F | Management | Sudden departure signal decoding / insider trading analysis |
+| G | Market Sentiment | Analyst upgrades / short report credibility / meme risk |
 
-**情绪评分**：`-3`（强烈利空）到 `+3`（强烈利好），统一标准便于跨时间比较。
+**Sentiment score**: `-3` (strong bearish) to `+3` (strong bullish) — consistent scale for cross-time comparison.
 
-**自动输出**：情绪分析报告 `.md` + `.pdf`（配色随评分变化），可选 Gmail 发送。
+**Auto output**: Sentiment report `.md` + `.pdf` (color-coded by score), with optional Gmail delivery.
 
-**参考文件**：
-- `references/sector-sensitivity.md` — 各行业对不同新闻的敏感度矩阵
-- `references/historical-patterns.md` — 历史同类事件市场反应规律
-- `references/source-credibility.md` — 新闻来源可信度分级 + 工具推荐
+**Reference files**:
+- `references/sector-sensitivity.md` — Sector sensitivity matrix for different news types
+- `references/historical-patterns.md` — Historical market reaction patterns for comparable events
+- `references/source-credibility.md` — News source credibility tiers + tool recommendations
 
-**触发示例**：
+**Trigger examples**:
 ```
-Adobe CEO 突然离职，这条新闻怎么看？
-帮我看看今天美股有哪些重要消息，逐条分析
-Fed 加息预期上升对我持有的科技股影响大吗？
+Adobe's CEO suddenly resigned — how should I read this?
+Walk me through today's key market news, one by one
+How much does rising Fed rate expectations affect my tech holdings?
 ```
 
 ---
 
 ### 📈 technical-analysis-primer
 
-解读美股技术指标，辅助判断当前价格位置和买卖时机。
+Read technical indicators to assess current price position and identify entry/exit zones.
 
-**五层分析框架**：
+**Five-Layer Analysis Framework**:
 
-| 层级 | 内容 | 核心产出 |
-|------|------|---------|
-| 第一层 | 趋势判断 | 主趋势 / 中趋势方向，趋势强度 |
-| 第二层 | 关键价位 | 重要支撑位与压力位（历史高低点/均线/整数关口）|
-| 第三层 | 均线系统 | 多头/空头排列，金叉/死叉状态 |
-| 第四层 | 动量指标 | RSI 超买超卖 + MACD 背离信号 |
-| 第五层 | 成交量确认 | 量价关系，有效突破 vs 假突破 |
+| Layer | Focus | Key Output |
+|-------|-------|------------|
+| Layer 1 | Trend | Primary/intermediate trend direction, trend strength |
+| Layer 2 | Key Levels | Support and resistance (historical pivots / MAs / round numbers) |
+| Layer 3 | Moving Averages | Bullish/bearish alignment, golden/death cross status |
+| Layer 4 | Momentum | RSI overbought/oversold + MACD divergence signals |
+| Layer 5 | Volume Confirmation | Price-volume relationship, valid breakout vs false breakout |
 
-**自动输出**：技术面分析报告 `.md`，保存至 `output/[TICKER]/`。
+**Auto output**: Technical analysis report `.md`, saved to `output/[TICKER]/`.
 
-**参考文件**：
-- `references/candlestick-patterns.md` — 40+ K线形态图示与解读
-- `references/indicator-settings.md` — 各指标参数配置与适用场景
-- `references/ta-checklist.md` — 买入/卖出前的技术面检查清单
+**Reference files**:
+- `references/candlestick-patterns.md` — 40+ candlestick patterns with annotations
+- `references/indicator-settings.md` — Indicator parameter configs and use cases
+- `references/ta-checklist.md` — Pre-buy / pre-sell technical checklist
 
-**触发示例**：
+**Trigger examples**:
 ```
-NVDA 现在是买入时机吗？
-均线死叉了怎么办？
-RSI 超买了要卖吗？
-帮我看看 AAPL 的支撑位在哪
+Is now a good time to buy NVDA?
+The MA just had a death cross — what should I do?
+Is RSI overbought a sell signal?
+Where's the support level for AAPL?
 ```
 
 ---
 
 ### 📋 weekly-portfolio-review
 
-对持仓进行周期性复盘，逐一验证每只股票的买入逻辑是否仍然成立。
+Periodic review of your holdings — verify that each stock's buy thesis still holds.
 
-**四问复盘框架**：
+**Four-Question Framework**:
 
-| 问题 | 核心验证 | 判断结论 |
-|------|---------|---------|
-| 买入逻辑还成立吗？ | 成长/估值/催化剂/护城河逻辑验证 | ✅ 继续持有 / ⚠️ 减仓观察 / 🚨 考虑清仓 |
-| 有没有出现新的风险？ | 公司/估值/宏观三类风险扫描 | 低 / 中 / 高 |
-| 仓位比例是否合理？ | 单仓占比上限检查 + 再平衡触发 | 维持 / 修剪 / 加仓 |
-| 与买入时相比性价比如何？ | 股价变化 × 逻辑变化四象限 | 改善 / 持平 / 恶化 |
+| Question | Core Check | Verdict |
+|----------|-----------|---------|
+| Does the buy thesis still hold? | Growth / valuation / catalyst / moat logic check | ✅ Hold / ⚠️ Trim & Watch / 🚨 Consider Exit |
+| Are there new risks? | Company / valuation / macro risk scan | Low / Medium / High |
+| Is the position size appropriate? | Single-name concentration limits + rebalance triggers | Maintain / Trim / Add |
+| How does the risk/reward compare to entry? | Price change × thesis change 2×2 matrix | Improved / Unchanged / Deteriorated |
 
-**自动输出**：持仓复盘报告 `.md`，保存至 `output/`。
+**Auto output**: Portfolio review report `.md`, saved to `output/`.
 
-**参考文件**：
-- `references/risk-checklist.md` — 持仓风险全面检查清单
-- `references/portfolio-health.md` — 组合健康度评估框架
-- `references/review-log.md` — 历史复盘记录格式
+**Reference files**:
+- `references/risk-checklist.md` — Comprehensive holding risk checklist
+- `references/portfolio-health.md` — Portfolio health assessment framework
+- `references/review-log.md` — Historical review log format (for tracking decision accuracy)
 
-**触发示例**：
+**Trigger examples**:
 ```
-帮我复盘一下持仓
-NVDA 还要继续持有吗？
-检查一下我的仓位，哪些该卖了
-（附上持仓清单）
+Review my portfolio for me
+Should I still hold NVDA?
+Check my positions — which ones should I sell?
+(paste your holdings table)
 ```
 
 ---
 
 ## Installation
 
-### 1. 安装 Claude Code CLI
+### 1. Install Claude Code CLI
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-### 2. 克隆本仓库
+### 2. Clone this repo
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/open-investor-skills.git
 ```
 
-### 3. 验证安装
+### 3. Verify installation
 
 ```bash
 claude
-> /context    # 查看已加载的 Skills 列表
+> /context    # check loaded Skills list
 ```
 
 ---
 
 ## Usage Examples
 
-### 基础用法：直接对话触发
+### Basic: trigger by chatting naturally
 
 ```bash
 claude
 
-# 个股研究
-> 帮我研究一下 NVDA，看看现在值不值得买
+# Fundamental research
+> Help me research NVDA — is it worth buying now?
 
-# 财报解读
-> AAPL Q1 2026 财报出来了，帮我解读一下
+# Earnings decoding
+> AAPL Q1 2026 earnings just dropped — decode it for me
 
-# 新闻分析
-> 今天 Adobe CEO 宣布离职，这对 ADBE 股价影响大吗？
+# News analysis
+> Adobe CEO just announced their resignation — how does this affect ADBE?
 
-# 技术分析
-> NVDA 现在技术面怎么样，支撑位在哪？
+# Technical analysis
+> What does NVDA's technical picture look like? Where's the support?
 
-# 持仓复盘
-> 帮我复盘一下持仓，NVDA/AAPL/MSFT 各占 30%/40%/30%
+# Portfolio review
+> Review my holdings: NVDA/AAPL/MSFT at 30%/40%/30%
 ```
 
 ---
 
 ## Output Structure
 
-每次分析自动在当前目录的 `output/` 下生成文件：
+Each analysis automatically generates files in the `output/` directory:
 
 ```
 output/
-├── NVDA_research_20260314.md          # 个股研究报告（Markdown）
-├── NVDA_research_20260314.pdf         # 个股研究报告（PDF）
-├── AAPL_10Q_2026Q1_20260314.md        # 财报解读笔记（Markdown）
-├── AAPL_10Q_2026Q1_20260314.pdf       # 财报解读笔记（PDF）
-├── ADBE_news_20260314_1430.md         # 新闻情绪报告（Markdown）
-├── ADBE_news_20260314_1430.pdf        # 新闻情绪报告（PDF，配色随评分变化）
+├── NVDA_research_20260314.md          # Fundamental research report (Markdown)
+├── NVDA_research_20260314.pdf         # Fundamental research report (PDF)
+├── AAPL_10Q_2026Q1_20260314.md        # Earnings notes (Markdown)
+├── AAPL_10Q_2026Q1_20260314.pdf       # Earnings notes (PDF)
+├── ADBE_news_20260314_1430.md         # News sentiment report (Markdown)
+├── ADBE_news_20260314_1430.pdf        # News sentiment report (PDF, color by score)
 ├── NVDA/
-│   └── NVDA_ta_20260314.md            # 技术面分析报告（Markdown）
-└── portfolio_review_20260314.md       # 持仓周复盘报告（Markdown）
+│   └── NVDA_ta_20260314.md            # Technical analysis report (Markdown)
+└── portfolio_review_20260314.md       # Weekly portfolio review (Markdown)
 ```
-
 
 ## License
 
