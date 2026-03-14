@@ -256,20 +256,7 @@ claude
 
 ## Output Structure
 
-Each analysis automatically generates files in the `output/` directory:
-
-```
-output/
-├── NVDA_research_20260314.md          # Fundamental research report (Markdown)
-├── NVDA_research_20260314.pdf         # Fundamental research report (PDF)
-├── AAPL_10Q_2026Q1_20260314.md        # Earnings notes (Markdown)
-├── AAPL_10Q_2026Q1_20260314.pdf       # Earnings notes (PDF)
-├── ADBE_news_20260314_1430.md         # News sentiment report (Markdown)
-├── ADBE_news_20260314_1430.pdf        # News sentiment report (PDF, color by score)
-├── NVDA/
-│   └── NVDA_ta_20260314.md            # Technical analysis report (Markdown)
-└── portfolio_review_20260314.md       # Weekly portfolio review (Markdown)
-```
+Each analysis automatically generates files in the `outputs/` directory
 
 ## License
 

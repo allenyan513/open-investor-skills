@@ -17,6 +17,49 @@ description: >
 
 ---
 
+## 持仓数据来源
+
+**在开始复盘之前，先读取持仓文件。**
+
+### 标准持仓文件
+
+```
+路径：{项目根目录}/portfolio/holdings.csv
+```
+
+**CSV 字段说明**：
+
+| 字段 | 说明 | 是否必填 |
+|------|------|---------|
+| `ticker` | 股票代码（如 AAPL） | ✅ 必填 |
+| `shares` | 持股数量 | ✅ 必填 |
+| `avg_cost` | 持仓均价（USD） | ✅ 必填 |
+| `target_price` | 目标价（USD） | 选填 |
+| `stop_loss` | 止损价（USD） | 选填 |
+| `position_pct` | 仓位占组合比例（%） | 建议填写 |
+
+### 用户操作指引
+
+```
+1. 复制 portfolio/holdings.example.csv → 重命名为 holdings.csv
+2. 填入自己的持仓数据（可用 Excel / Numbers / 任意文本编辑器）
+3. 每次持仓变动后手动更新（买入、卖出、加减仓）
+4. 触发本 Skill 时无需手动粘贴，Claude 会自动读取该文件
+```
+
+### 读取逻辑
+
+```
+[Skill 启动]
+     ↓
+读取 {项目根目录}/portfolio/holdings.csv
+     ↓
+若文件不存在 → 提示用户参考 holdings.example.csv 创建
+若文件存在   → 解析所有持仓行，逐一进行复盘分析
+```
+
+---
+
 ## 核心理念
 
 > **持有一只股票，等于每天在当前价格重新买入它。**
@@ -37,26 +80,6 @@ description: >
   ✓ 我知道什么情况下该卖（失效条件）
   ✓ 我定期检查这些条件是否发生了变化
 ```
-
----
-
-## 复盘前准备
-
-用户需提供（可以是表格、列表、任意格式）：
-
-```
-每只持仓的基本信息：
-  ① 股票代码
-  ② 买入均价
-  ③ 当前持仓比例（占总仓位的百分比）
-  ④ 买入时间（大概）
-  ⑤ 当初买入的核心逻辑（一句话即可）
-```
-
-如果用户没有提供买入逻辑，先询问：
-**"你当初买 [TICKER] 的主要原因是什么？"**
-这是整个复盘最关键的一步，不能跳过。
-
 ---
 
 ## 复盘流程：四个问题
@@ -349,17 +372,17 @@ description: >
 
 ### 文件命名
 ```
-[TICKER]_portfolio_review_[YYYYMMDD].md
-示例：NVDA_portfolio_review_20260314.md
-保存路径：当前目录下的 outputs/[TICKER] 子目录
+weekly-portfolio_review_[YYYYMMDD].md
+示例：weekly_portfolio_review_20260314.md
+保存路径：项目根目录下的 outputs/portfolio 子目录
 ```
 
 **执行顺序**：
 ```
 [分析完成]
      ↓
-1. mkdir -p outputs/[TICKER]
-2. 写入 outputs/[TICKER]/[TICKER]_portfolio_review_[DATE].md
+1. mkdir -p {项目根目录}/outputs/portfolio  （项目根目录 = git 仓库根目录）
+2. 写入 {项目根目录}/outputs/portfolio/weekly_portfolio_review_[DATE].md
      ↓
 "✅ 分析完成"
 ```

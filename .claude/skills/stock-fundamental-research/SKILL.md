@@ -220,15 +220,15 @@ description: >
 ```
 [TICKER]_research_[YYYYMMDD_HHMM].md
 示例：NVDA_research_20250314_1430.md
-保存路径：当前目录下的 outputs/[TICKER] 子目录
+保存路径：项目根目录下的 outputs/[TICKER] 子目录
 ```
 
 **执行顺序**：
 ```
 [分析完成]
      ↓
-1. mkdir -p outputs/[TICKER]
-2. 写入 output/[TICKER]/[TICKER]_research_[DATE_TIME].md
+1. mkdir -p {项目根目录}/outputs/[TICKER]  （项目根目录 = SKILL.md 所在的 .claude/skills/../../.. 即 git 仓库根目录）
+2. 写入 {项目根目录}/outputs/[TICKER]/[TICKER]_research_[DATE_TIME].md
      ↓
 "✅ 分析完成 "
 ```
