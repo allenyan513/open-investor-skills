@@ -1,4 +1,5 @@
 .gitignore
 .idea
+.env
 output
 outputs

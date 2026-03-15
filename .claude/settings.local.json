@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "Bash(python3:*)",
+      "Bash(pandoc:*)"
     ]
   }
 }
